@@ -1,0 +1,15 @@
+.game-tile-container {
+  position: absolute;
+  background-color: #ccf;
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+}
+
+.game-tile {
+  position: absolute;
+  background-color: #fcc;
+  width: 100px;
+  height: 100px;
+  transition: all 400ms ease-in-out;
+}
