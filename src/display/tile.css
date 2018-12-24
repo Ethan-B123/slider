@@ -1,8 +1,8 @@
 .game-tile-container {
   position: absolute;
   background-color: #ccf;
-  width: 300px;
-  height: 300px;
+  width: 500px;
+  height: 500px;
   overflow: hidden;
 }
 
