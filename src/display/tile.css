@@ -4,6 +4,7 @@
   width: 500px;
   height: 500px;
   overflow: hidden;
+  top: 200px;
 }
 
 .game-tile {
@@ -11,5 +12,5 @@
   background-color: #fcc;
   width: 100px;
   height: 100px;
-  transition: all 400ms ease-in-out;
+  transition: all 400ms ease-in-out, z-index 0ms linear;
 }

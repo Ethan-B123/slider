@@ -44,8 +44,15 @@ class Tile {
     const width = containerSize.x / rowsCols.y;
     const positions = makePositions(pos, containerSize);
     Object.keys(positions).forEach(posKey => {
-      updateStyle(posKey, positions[posKey], width, height);
+      const pos = positions[posKey];
+      const offscreen =
+        pos.x + width < 0 ||
+        pos.y + height < 0 ||
+        pos.x > containerSize.x ||
+        pos.y > containerSize.y;
+      updateStyle(posKey, pos, width, height, offscreen);
     });
+    this.updateNames();
   }
 
   createDomTiles(
@@ -74,12 +81,13 @@ class Tile {
     return tile;
   }
 
-  updateStyle(posKey, pos, width, height) {
+  updateStyle(posKey, pos, width, height, offscreen) {
     const tile = this["dom_" + posKey];
     tile.style.left = pos.x + "px";
     tile.style.top = pos.y + "px";
     tile.style.width = width + "px";
     tile.style.height = height + "px";
+    tile.style.zIndex = offscreen ? -1 : 1;
   }
 
   makePositions(pos, containerSize = this.containerSize) {
@@ -99,6 +107,46 @@ class Tile {
       result[key].y = wrap(result[key].y, false, containerSize);
     });
     return result;
+  }
+
+  findOff(pos, containerSize = this.containerSize) {
+    const result = { x: false, y: false };
+    if (pos.x < 0 || pos.x >= containerSize.x) {
+      result.x = true;
+    }
+    if (pos.y < 0 || pos.y >= containerSize.y) {
+      result.y = true;
+    }
+    return result;
+  }
+
+  updateNames() {
+    const old = {};
+    const updated = {};
+    ["offX", "offY", "offXY", "on"].forEach(key => {
+      const node = this["dom_" + key];
+      old["dom_" + key] = node;
+    });
+    ["offX", "offY", "offXY", "on"].forEach(key => {
+      const node = this["dom_" + key];
+      const pos = {
+        x: parseInt(node.style.left),
+        y: parseInt(node.style.top)
+      };
+      const { x: offX, y: offY } = this.findOff(pos);
+      if (offX && offY) {
+        updated["dom_offXY"] = node;
+      } else if (offX) {
+        updated["dom_offX"] = node;
+      } else if (offY) {
+        updated["dom_offY"] = node;
+      } else {
+        updated["dom_on"] = node;
+        this.pos.x = parseInt(node.style.left)
+        this.pos.y = parseInt(node.style.right)
+      }
+    });
+    Object.assign(this, updated);
   }
 
   offset(pos, xAxis, containerSize = this.containerSize) {

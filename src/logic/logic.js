@@ -43,9 +43,9 @@ class Logic {
     );
     movingTiles.forEach(key => {
       this.tiles[key][axisIdx] += amount;
-      while(this.tiles[key][axisIdx] < 0) {
-        this.tiles[key][axisIdx] += this.dimensions[this.currentAxis]
-      }
+      // while(this.tiles[key][axisIdx] < 0) {
+      //   this.tiles[key][axisIdx] += this.dimensions[this.currentAxis]
+      // }
     });
     this._onUpdate();
   }
@@ -60,18 +60,24 @@ class Logic {
     );
     movingTiles.forEach(key => {
       const currentAxisValue = this.tiles[key][axisIdx];
-      let newAxisValue;
-      if (currentAxisValue % 1 < 0.5) {
-        newAxisValue = Math.floor(currentAxisValue);
-      } else {
-        newAxisValue = Math.ceil(currentAxisValue);
-      }
-      this.tiles[key][axisIdx] =
-        newAxisValue % this.dimensions[this.currentAxis];
+      let newAxisValue = Math.round(currentAxisValue);
+      this.tiles[key][axisIdx] = this.posMod(
+        newAxisValue,
+        this.dimensions[this.currentAxis]
+      );
     });
     this.currentAxis = null;
     this.currentTile = null;
     this._onUpdate();
+  }
+
+  posMod(val, base) {
+    let newValue = val % base;
+    if (newValue < 0 || Object.is(newValue, -0)) {
+      return (base + newValue) % base;
+    } else {
+      return newValue;
+    }
   }
 }
 
