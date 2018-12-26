@@ -5,6 +5,7 @@
   height: 500px;
   overflow: hidden;
   top: 200px;
+  cursor: pointer;
 }
 
 .game-tile {

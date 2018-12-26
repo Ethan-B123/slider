@@ -1,5 +1,4 @@
 import Tile from "./tile.js";
-import { debug } from "util";
 
 class Board {
   constructor({ containerSize, dimensions, containerDom }) {
@@ -50,6 +49,21 @@ class Board {
         newGrid[key][0] * (this.containerSize.x / this.dimensions.x),
         newGrid[key][1] * (this.containerSize.y / this.dimensions.y)
       );
+    });
+  }
+
+  async finishTransition() {
+    Object.keys(this.grid).forEach(key => {
+      this.grid[key].applyStyle({
+        transition: "none"
+      });
+    });
+    await new Promise(res => requestAnimationFrame(res));
+    Object.keys(this.grid).forEach(key => {
+      // if (key === "0,0") debugger;
+      this.grid[key].applyStyle({
+        transition: null
+      });
     });
   }
 

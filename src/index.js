@@ -55,11 +55,12 @@ window.makeGame = () => {
 
   function updateStyleAfter(fn) {
     // this is hacky
-    return () => {
+    return async () => {
       if (!currentMouseSpot) return;
       const x = parseInt(currentMouseSpot.split(",")[0]);
       const y = parseInt(currentMouseSpot.split(",")[1]);
       // console.log(mouseSpotObj);
+      await board.finishTransition();
       board.setTileStyle(currentTileKey, {
         border: "0px solid #fff"
       });
