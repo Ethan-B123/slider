@@ -20,8 +20,8 @@ class Tile {
 
   tileText() {
     return {
-      char: String.fromCharCode(65 + this.dimension.x),
-      int: this.dimension.y + 1
+      char: String.fromCharCode(65 + this.dimension.y),
+      int: this.dimension.x + 1
     }
   }
 
