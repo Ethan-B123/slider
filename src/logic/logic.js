@@ -13,11 +13,20 @@ class Logic {
     }
   }
 
+  shuffle(n) {
+    for (let i = 0; i < n; i++) {
+      const axis = randomInt(2);
+      const move = [0,0]
+      move[axis] = randomInt(2) === 0 ? -1 : 1;
+      const tileLocation = `${randomInt(this.dimensions.x)},${randomInt(this.dimensions.y)}`
+      this.fullMove(move[0], move[1], tileLocation, true);
+    }
+    this._onUpdate();
+  }
+
   tileKeyAtDimension({ x, y }) {
     return Object.keys(this.tiles).find(
-      key =>
-        this.tiles[key][0] === x &&
-        this.tiles[key][1] === y
+      key => this.tiles[key][0] === x && this.tiles[key][1] === y
     );
   }
 
@@ -29,13 +38,13 @@ class Logic {
     return tileClone;
   }
 
-  fullMove(x, y, tileLocation) {
+  fullMove(x, y, tileLocation, skipUpdate = false) {
     if (!tileLocation) return;
     const axis = x ? "x" : "y";
     const amount = x || y;
     this.grab(axis, tileLocation);
-    this.move(amount);
-    this.snap();
+    this.move(amount, skipUpdate);
+    this.snap(skipUpdate);
   }
 
   grab(axis, tileLocation) {
@@ -50,7 +59,7 @@ class Logic {
     );
   }
 
-  move(amount) {
+  move(amount, skipUpdate = false) {
     if (!this.currentAxis || !this.currentTile) throw "not grabbed";
     const currentTileLocation = this.tiles[this.currentTile].slice();
     const axisIdx = this.currentAxis === "x" ? 0 : 1;
@@ -64,10 +73,10 @@ class Logic {
       //   this.tiles[key][axisIdx] += this.dimensions[this.currentAxis]
       // }
     });
-    this._onUpdate();
+    if (!skipUpdate) this._onUpdate();
   }
 
-  snap() {
+  snap(skipUpdate = false) {
     if (!this.currentAxis || !this.currentTile) throw "not grabbed";
     const currentTileLocation = this.tiles[this.currentTile].slice();
     const axisIdx = this.currentAxis === "x" ? 0 : 1;
@@ -85,7 +94,7 @@ class Logic {
     });
     this.currentAxis = null;
     this.currentTile = null;
-    this._onUpdate();
+    if (!skipUpdate) this._onUpdate();
   }
 
   posMod(val, base) {
@@ -96,6 +105,10 @@ class Logic {
       return newValue;
     }
   }
+}
+
+function randomInt(max) {
+  return Math.floor(Math.random() * max)
 }
 
 export default Logic;
