@@ -15,6 +15,7 @@ class Board {
       for (let x = 0; x < dimensions.x; x++) {
         this.grid[`${x},${y}`] = new Tile({
           pos: { x: x * size.x, y: y * size.y },
+          dimension: { x, y },
           rowsCols: { ...dimensions },
           containerSize: { ...containerSize },
           customStyles: this.createCustomStyle(x, y),

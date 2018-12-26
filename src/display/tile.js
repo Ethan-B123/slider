@@ -1,8 +1,9 @@
 import "./tile.css";
 
 class Tile {
-  constructor({ pos, containerSize, rowsCols, customStyles, parent }) {
+  constructor({ dimension, pos, containerSize, rowsCols, customStyles, parent }) {
     this.bindFunctions();
+    this.dimension = dimension;
     this.pos = pos;
     this.customStyles = customStyles;
     this.containerSize = containerSize;
@@ -15,6 +16,13 @@ class Tile {
   move(x, y) {
     this.pos = { x, y };
     this.updateDomTiles();
+  }
+
+  tileText() {
+    return {
+      char: String.fromCharCode(65 + this.dimension.x),
+      int: this.dimension.y + 1
+    }
   }
 
   appendTo(domNode) {
@@ -84,6 +92,13 @@ class Tile {
 
   createDomTile() {
     const tile = document.createElement("div");
+    const charEl = document.createElement("p");
+    const intEl = document.createElement("p");
+    const { char, int } = this.tileText()
+    charEl.innerHTML = char;
+    intEl.innerHTML = int;
+    tile.appendChild(charEl);
+    tile.appendChild(intEl);
     tile.classList.add("game-tile");
     return tile;
   }

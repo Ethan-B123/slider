@@ -41,11 +41,11 @@ window.makeGame = () => {
       if (nextTileKey !== currentTileKey) {
         if (currentTileKey) {
           board.setTileStyle(currentTileKey, {
-            border: "0px solid #fff"
+            borderWidth: "0px"
           });
         }
         board.setTileStyle(nextTileKey, {
-          border: "10px solid #fff"
+          borderWidth: "7px"
         });
         currentMouseSpot = nextMouseSpot;
         currentTileKey = nextTileKey;
@@ -59,20 +59,15 @@ window.makeGame = () => {
       if (!currentMouseSpot) return;
       const x = parseInt(currentMouseSpot.split(",")[0]);
       const y = parseInt(currentMouseSpot.split(",")[1]);
-      // console.log(mouseSpotObj);
       await board.finishTransition();
       board.setTileStyle(currentTileKey, {
-        border: "0px solid #fff"
+        borderWidth: "0px"
       });
       fn();
       const nextTileKey = logic.tileKeyAtDimension({ x, y });
       currentTileKey = nextTileKey;
-
-      // console.log({ x, y });
-      // console.log(nextTileKey);
-
       board.setTileStyle(nextTileKey, {
-        border: "10px solid #fff"
+        borderWidth: "7px"
       });
     };
   }
