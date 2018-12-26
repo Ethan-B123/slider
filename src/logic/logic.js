@@ -21,6 +21,15 @@ class Logic {
     return tileClone;
   }
 
+  fullMove(x, y, tileLocation) {
+    if (!tileLocation) return;
+    const axis = x ? "x" : "y";
+    const amount = x || y;
+    this.grab(axis, tileLocation);
+    this.move(amount);
+    this.snap();
+  }
+
   grab(axis, tileLocation) {
     if (this.currentAxis || this.currentTile) throw "already grabbed";
     if (typeof tileLocation === "string")

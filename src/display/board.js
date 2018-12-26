@@ -3,6 +3,7 @@ import { debug } from "util";
 
 class Board {
   constructor({ containerSize, dimensions, containerDom }) {
+    this.bindFunctions();
     this.grid = {};
     this.dimensions = dimensions;
     this.containerSize = containerSize;
@@ -22,6 +23,13 @@ class Board {
         });
       }
     }
+  }
+
+  findDimension({ x, y }) {
+    return {
+      x: Math.floor((x / this.containerSize.x) * this.dimensions.x),
+      y: Math.floor((y / this.containerSize.y) * this.dimensions.y)
+    };
   }
 
   createCustomStyle(x, y, dimX = this.dimensions.x, dimY = this.dimensions.y) {
@@ -58,6 +66,14 @@ class Board {
       const { x: oldX, y } = tile.pos;
       tile.move(oldX + dist, y);
     }
+  }
+
+  bindFunctions() {
+    this.findDimension = this.findDimension.bind(this);
+    this.createCustomStyle = this.createCustomStyle.bind(this);
+    this.updateGrid = this.updateGrid.bind(this);
+    this.moveGroup = this.moveGroup.bind(this);
+    this.testingMove = this.testingMove.bind(this);
   }
 }
 
