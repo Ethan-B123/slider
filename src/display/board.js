@@ -39,6 +39,10 @@ class Board {
     };
   }
 
+  setTileStyle(tileKey, styles) {
+    this.grid[tileKey].applyStyle(styles);
+  }
+
   updateGrid(newGrid) {
     Object.keys(newGrid).forEach(key => {
       const tile = this.grid[key];

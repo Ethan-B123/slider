@@ -29,6 +29,13 @@ class Tile {
     });
   }
 
+  applyStyle(style) {
+    ["dom_offX", "dom_offY", "dom_offXY", "dom_on"].forEach(domKey => {
+      const tile = this[domKey];
+      Object.assign(tile.style, style);
+    });
+  }
+
   applyCustomStyles(posKey, customStyles = this.customStyles) {
     const tile = this["dom_" + posKey];
     Object.assign(tile.style, customStyles);

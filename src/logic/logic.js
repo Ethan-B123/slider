@@ -13,6 +13,14 @@ class Logic {
     }
   }
 
+  tileKeyAtDimension({ x, y }) {
+    return Object.keys(this.tiles).find(
+      key =>
+        this.tiles[key][0] === x &&
+        this.tiles[key][1] === y
+    );
+  }
+
   cloneTiles() {
     const tileClone = {};
     Object.keys(this.tiles).forEach(key => {

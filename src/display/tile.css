@@ -12,5 +12,7 @@
   background-color: #fcc;
   width: 100px;
   height: 100px;
-  transition: all 400ms ease-in-out, z-index 0ms linear;
+  border: 0px solid #fff;
+  transition: all 300ms ease-in-out, z-index 0ms linear,
+    border 200ms ease-in-out;
 }
