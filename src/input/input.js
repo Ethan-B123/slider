@@ -1,9 +1,12 @@
 export class MouseInput {
-  constructor({ element, onMouseMove }) {
+  constructor({ element, onMouseMove, onMouseLeave }) {
     this._onMouseMove = this._onMouseMove.bind(this);
+    this._onMouseLeave = this._onMouseLeave.bind(this);
     this.onMouseMove = onMouseMove;
+    this.onMouseLeave = onMouseLeave;
     this.element = element;
     this.element.addEventListener("mousemove", this._onMouseMove);
+    this.element.addEventListener("mouseleave", this._onMouseLeave);
   }
 
   remove() {
@@ -15,6 +18,12 @@ export class MouseInput {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     this.onMouseMove({ x, y });
+  }
+
+  _onMouseLeave() {
+    if (this.onMouseLeave) {
+      this.onMouseLeave();
+    }
   }
 }
 

@@ -48,6 +48,15 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
         currentMouseSpot = nextMouseSpot;
         currentTileKey = nextTileKey;
       }
+    }, onMouseLeave: () => {
+      if(currentTileKey) {
+        board.setTileStyle(currentTileKey, {
+          borderWidth: "0px"
+        });
+        currentTileKey = null;
+      } else {
+        throw "how..."
+      }
     }
   }));
 
