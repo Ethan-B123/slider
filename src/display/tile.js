@@ -1,4 +1,4 @@
-import "./tile.css";
+import "./display.css";
 
 class Tile {
   constructor({ dimension, pos, containerSize, rowsCols, customStyles, parent }) {

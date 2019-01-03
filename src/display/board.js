@@ -25,6 +25,13 @@ class Board {
     }
   }
 
+  remove() {
+    Object.keys(this.grid).forEach(key => {
+      const tile = this.grid[key];
+      tile.removeFromDom();
+    });
+  }
+
   findDimension({ x, y }) {
     return {
       x: Math.floor((x / this.containerSize.x) * this.dimensions.x),

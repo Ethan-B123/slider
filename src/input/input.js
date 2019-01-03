@@ -3,11 +3,11 @@ export class MouseInput {
     this._onMouseMove = this._onMouseMove.bind(this);
     this.onMouseMove = onMouseMove;
     this.element = element;
-    element.addEventListener("mousemove", this._onMouseMove);
+    this.element.addEventListener("mousemove", this._onMouseMove);
   }
 
   remove() {
-    element.removeEventListener("mousemove", this._onMouseMove);
+    this.element.removeEventListener("mousemove", this._onMouseMove);
   }
 
   _onMouseMove(e) {
@@ -23,11 +23,11 @@ export class KeyInput {
     this.keys = keys;
     this.element = element;
     this._onKeyDown = this._onKeyDown.bind(this);
-    element.addEventListener("keypress", this._onKeyDown);
+    this.element.addEventListener("keypress", this._onKeyDown);
   }
 
   remove() {
-    element.removeEventListener("mouseover", this._onMouseOver);
+    this.element.removeEventListener("keypress", this._onKeyDown);
   }
 
   _onKeyDown(e) {
