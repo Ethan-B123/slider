@@ -1,16 +1,48 @@
 import "./display.css";
 
 class Tile {
-  constructor({ dimension, pos, containerSize, rowsCols, customStyles, parent }) {
+  constructor({
+    dimension,
+    pos,
+    containerSize,
+    rowsCols,
+    customStyles,
+    parent,
+    css
+  }) {
     this.bindFunctions();
     this.dimension = dimension;
     this.pos = pos;
+    this.css = css;
     this.customStyles = customStyles;
     this.containerSize = containerSize;
     this.rowsCols = rowsCols;
     this.parent = parent;
     this.createDomTiles(pos, containerSize, rowsCols, parent);
     this.appendTo(parent);
+    this.highlighted = this.onCorrectPos = false;
+  }
+
+  setHighlighted(bool) {
+    this.highlighted = bool;
+    this.applyStyle(
+      this.css[this.highlighted ? "highlightedCss" : "unhighlightedCss"]
+    );
+    if(!bool) {
+      this.applyStyle(
+        this.css[this.onCorrectPos ? "correctCss" : "incorrectCss"]
+      );
+    }
+  }
+
+  setCorrectPos(bool) {
+    this.onCorrectPos = bool;
+    this.applyStyle(
+      this.css[this.highlighted ? "highlightedCss" : "unhighlightedCss"]
+    );
+    this.applyStyle(
+      this.css[this.onCorrectPos ? "correctCss" : "incorrectCss"]
+    );
   }
 
   move(x, y) {
@@ -22,7 +54,7 @@ class Tile {
     return {
       char: String.fromCharCode(65 + this.dimension.y),
       int: this.dimension.x + 1
-    }
+    };
   }
 
   appendTo(domNode) {
@@ -55,8 +87,8 @@ class Tile {
     rowsCols = this.rowsCols
   ) {
     const { makePositions, updateStyle, appendTo, parent } = this;
-    const height = containerSize.y / rowsCols.x;
-    const width = containerSize.x / rowsCols.y;
+    const height = containerSize.y / rowsCols.y;
+    const width = containerSize.x / rowsCols.x;
     const positions = makePositions(pos, containerSize);
     Object.keys(positions).forEach(posKey => {
       const pos = positions[posKey];
@@ -92,13 +124,17 @@ class Tile {
 
   createDomTile() {
     const tile = document.createElement("div");
+    const containerTopLeft = document.createElement("div");
+    const containerBottomRight = document.createElement("div");
     const charEl = document.createElement("p");
     const intEl = document.createElement("p");
-    const { char, int } = this.tileText()
+    const { char, int } = this.tileText();
     charEl.innerHTML = char;
     intEl.innerHTML = int;
-    tile.appendChild(charEl);
-    tile.appendChild(intEl);
+    containerTopLeft.appendChild(charEl);
+    containerBottomRight.appendChild(intEl);
+    tile.appendChild(containerTopLeft);
+    tile.appendChild(containerBottomRight);
     tile.classList.add("game-tile");
     return tile;
   }
@@ -164,8 +200,8 @@ class Tile {
         updated["dom_offY"] = node;
       } else {
         updated["dom_on"] = node;
-        this.pos.x = parseInt(node.style.left)
-        this.pos.y = parseInt(node.style.right)
+        this.pos.x = parseInt(node.style.left);
+        this.pos.y = parseInt(node.style.right);
       }
     });
     Object.assign(this, updated);

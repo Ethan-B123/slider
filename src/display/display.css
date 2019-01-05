@@ -36,11 +36,13 @@
 
 .game-tile-container {
   position: absolute;
-  background-color: #ccf;
   width: 500px;
   height: 500px;
   overflow: hidden;
   cursor: pointer;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: Gradient 2s linear infinite;
 }
 
 .game-tile {
@@ -60,24 +62,54 @@
     border 200ms ease-in-out;
 }
 
-.game-tile > p {
+.game-tile > div {
   position: absolute;
   margin: 0;
+  width: 30%;
+  height: 30%;
+  padding: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.game-tile > p:first-of-type {
-  top: -1px;
-  left: -1px;
-  padding: 0 17px 13px 4px;
+.game-tile > div:first-of-type {
+  top: 0;
+  left: 0;
+  /* padding: 2px 17px 13px 6px; */
   background-color: #fff;
-  clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+  clip-path: circle(80% at 3% 3%);
 }
-
-.game-tile > p:last-of-type {
-  right: -1px;
-  bottom: -1px;
-  padding: 13px 4px 0 17px;
+.game-tile > div > p {
+  height: 0;
+  width: 0;
+  line-height: 0;
+  position: relative;
+}
+.game-tile > div:first-of-type > p {
+  top: -25%;
+  left: -50%;
+}
+.game-tile > div:last-of-type > p {
+  top: 25%;
+  right: -10%;
+}
+.game-tile > div:last-of-type {
+  right: 0;
+  bottom: 0;
+  clip-path: circle(80% at 97% 97%);
   background-color: #000;
   color: #fff;
-  clip-path: polygon(100% 100%, 100% 0%, 0% 100%);
+}
+
+@keyframes Gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }

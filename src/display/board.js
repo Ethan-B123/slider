@@ -1,7 +1,15 @@
 import Tile from "./tile.js";
 
 class Board {
-  constructor({ containerSize, dimensions, containerDom }) {
+  constructor({
+    containerSize,
+    dimensions,
+    containerDom,
+    highlightedCss,
+    unhighlightedCss,
+    correctCss,
+    incorrectCss
+  }) {
     this.bindFunctions();
     this.grid = {};
     this.dimensions = dimensions;
@@ -11,17 +19,39 @@ class Board {
       x: containerSize.x / dimensions.x,
       y: containerSize.y / dimensions.y
     };
+    this.css = {
+      highlightedCss,
+      unhighlightedCss,
+      correctCss,
+      incorrectCss
+    };
     for (let y = 0; y < dimensions.y; y++) {
       for (let x = 0; x < dimensions.x; x++) {
-        this.grid[`${x},${y}`] = new Tile({
+        this.grid[`${x},${y}`] 
+        = new Tile({
           pos: { x: x * size.x, y: y * size.y },
           dimension: { x, y },
           rowsCols: { ...dimensions },
           containerSize: { ...containerSize },
           customStyles: this.createCustomStyle(x, y),
+          css: this.css,
           parent: containerDom
         });
       }
+    }
+  }
+
+  setHighlighted(dimensionLocation, bool) {
+    this.grid[dimensionLocation].setHighlighted(bool)
+  }
+
+  setCorrectPlaceStyle(dimensionLocation, newPosition) {
+    const [x, y] = dimensionLocation.split(",").map(str => parseInt(str));
+    const [currentX, currentY] = newPosition;
+    if (x === currentX && y === currentY) {
+      this.grid[dimensionLocation].setCorrectPos(true)
+    } else {
+      this.grid[dimensionLocation].setCorrectPos(false)
     }
   }
 
@@ -53,6 +83,7 @@ class Board {
   updateGrid(newGrid) {
     Object.keys(newGrid).forEach(key => {
       const tile = this.grid[key];
+      this.setCorrectPlaceStyle(key, newGrid[key]);
       tile.move(
         newGrid[key][0] * (this.containerSize.x / this.dimensions.x),
         newGrid[key][1] * (this.containerSize.y / this.dimensions.y)
@@ -68,38 +99,16 @@ class Board {
     });
     await new Promise(res => requestAnimationFrame(res));
     Object.keys(this.grid).forEach(key => {
-      // if (key === "0,0") debugger;
       this.grid[key].applyStyle({
         transition: null
       });
     });
   }
 
-  moveGroup(group, axis, amount) {
-    group.forEach(key => {
-      const tile = this.grid[key];
-      const { x: oldX, y: oldY } = tile.pos;
-      tile.move(
-        oldX + (axis === "x" ? amount : 0),
-        oldY + (axis === "y" ? amount : 0)
-      );
-    });
-  }
-
-  testingMove(dist) {
-    for (let x = 0; x < this.dimensions.x; x++) {
-      const tile = this.grid[`${x},1`];
-      const { x: oldX, y } = tile.pos;
-      tile.move(oldX + dist, y);
-    }
-  }
-
   bindFunctions() {
     this.findDimension = this.findDimension.bind(this);
     this.createCustomStyle = this.createCustomStyle.bind(this);
     this.updateGrid = this.updateGrid.bind(this);
-    this.moveGroup = this.moveGroup.bind(this);
-    this.testingMove = this.testingMove.bind(this);
   }
 }
 

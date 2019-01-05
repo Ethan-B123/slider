@@ -12,12 +12,18 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
   const board = (window.board = new Board({
     containerSize: { x: 500, y: 500 },
     dimensions,
-    containerDom: document.querySelector(".game-tile-container")
+    containerDom: document.querySelector(".game-tile-container"),
+    highlightedCss: { borderWidth: "7px" },
+    unhighlightedCss: { borderWidth: null },
+    correctCss: { borderColor: "#fff", borderWidth: "1px", clipPath: "polygon(4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px))" },
+    incorrectCss: { borderColor: "#000", borderWidth: "0px", clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }
   }));
+
+  // 
 
   const logic = (window.logic = new Logic({
     dimensions,
-    onUpdate: window.board.updateGrid.bind(window.board)
+    onUpdate: board.updateGrid.bind(board)
   }));
 
   const keyInput = (window.keyInput = new KeyInput({
@@ -38,24 +44,17 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
       const nextMouseSpot = `${mouseSpotObj.x},${mouseSpotObj.y}`;
       if (nextTileKey !== currentTileKey) {
         if (currentTileKey) {
-          board.setTileStyle(currentTileKey, {
-            borderWidth: "0px"
-          });
+          board.setHighlighted(currentTileKey, false);
         }
-        board.setTileStyle(nextTileKey, {
-          borderWidth: "7px"
-        });
+        board.setHighlighted(nextTileKey, true);
         currentMouseSpot = nextMouseSpot;
         currentTileKey = nextTileKey;
       }
-    }, onMouseLeave: () => {
-      if(currentTileKey) {
-        board.setTileStyle(currentTileKey, {
-          borderWidth: "0px"
-        });
-        currentTileKey = null;
-      } else {
-        throw "how..."
+    },
+    onMouseLeave: () => {
+      if (currentTileKey) {
+        board.setHighlighted(currentTileKey, false);
+        currentTileKey = currentMouseSpot = null;
       }
     }
   }));
@@ -68,21 +67,16 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
       const x = parseInt(currentMouseSpot.split(",")[0]);
       const y = parseInt(currentMouseSpot.split(",")[1]);
       await board.finishTransition();
-      board.setTileStyle(currentTileKey, {
-        borderWidth: "0px"
-      });
+      board.setHighlighted(currentTileKey, false);
       fn();
       const nextTileKey = logic.tileKeyAtDimension({ x, y });
       currentTileKey = nextTileKey;
-      board.setTileStyle(nextTileKey, {
-        borderWidth: "7px"
-      });
+      board.setHighlighted(nextTileKey, true);
     };
   }
 
   return {
     endGame: () => {
-
       board.remove();
       keyInput.remove();
       mouseInput.remove();
