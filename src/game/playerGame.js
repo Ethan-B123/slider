@@ -1,6 +1,9 @@
 import Board from "../display/board";
 import Logic from "../logic/logic";
 import { KeyInput, MouseInput } from "../input/input";
+import Memory from "../logic/memory";
+
+window.Memory = Memory;
 
 export default ({ dimensions = { x: 4, y: 4 } }) => {
   let currentMouseSpot = null;
@@ -16,10 +19,8 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
     highlightedCss: { borderWidth: "7px" },
     unhighlightedCss: { borderWidth: null },
     correctCss: { borderColor: "#fff", borderWidth: "1px", clipPath: "polygon(4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px))" },
-    incorrectCss: { borderColor: "#000", borderWidth: "0px", clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }
+    incorrectCss: { borderColor: "#000", borderWidth: "0px", clipPath: "polygon(-1% -1%, 101% -1%, 101% 101%, -1% 101%)" }
   }));
-
-  // 
 
   const logic = (window.logic = new Logic({
     dimensions,
