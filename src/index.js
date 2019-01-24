@@ -31,6 +31,7 @@ function attachListeners() {
   document.querySelector("#btn-start-game").addEventListener("click", () => {
     globalShuffle();
     globalSetAllowInput(true);
+    globalMemory.startTimer();
     document.querySelector(".game-tile-overlay").style.cursor = "pointer";
     document.querySelector(".game-tile-overlay").style.opacity = "0";
   });
