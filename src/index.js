@@ -4,9 +4,11 @@ import "./index.css";
 let globalEndGame = null;
 let globalShuffle = null;
 let globalSetAllowInput = null;
+let globalMemory = null;
 
 window.makeGame = () => {
-  const { endGame, shuffle, setAllowInput } = makePlayerGame({});
+  const { endGame, shuffle, setAllowInput, memory } = makePlayerGame({});
+  globalMemory = memory;
   globalEndGame = endGame;
   globalShuffle = shuffle;
   document.querySelector(".game-tile-overlay").style.cursor = "no-drop";
@@ -34,5 +36,11 @@ function attachListeners() {
   });
   document.querySelector("#btn-restart-game").addEventListener("click", () => {
     restart();
+  });
+  document.querySelector("#btn-undo").addEventListener("click", () => {
+    globalMemory.undo();
+  });
+  document.querySelector("#btn-redo").addEventListener("click", () => {
+    globalMemory.redo();
   });
 }

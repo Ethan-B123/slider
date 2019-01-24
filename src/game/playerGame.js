@@ -18,21 +18,55 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
     containerDom: document.querySelector(".game-tile-container"),
     highlightedCss: { borderWidth: "7px" },
     unhighlightedCss: { borderWidth: null },
-    correctCss: { borderColor: "#fff", borderWidth: "1px", clipPath: "polygon(4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px))" },
-    incorrectCss: { borderColor: "#000", borderWidth: "0px", clipPath: "polygon(-1% -1%, 101% -1%, 101% 101%, -1% 101%)" }
+    correctCss: {
+      borderColor: "#fff",
+      borderWidth: "1px",
+      opacity: 0.8
+      // clipPath:
+      //   "polygon(4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px))"
+    },
+    incorrectCss: {
+      borderColor: "#000",
+      borderWidth: "0px",
+      // clipPath: "polygon(-1% -1%, 101% -1%, 101% 101%, -1% 101%)",
+      opacity: 1
+    }
   }));
 
   const logic = (window.logic = new Logic({
     dimensions,
-    onUpdate: board.updateGrid.bind(board)
+    onUpdate: (newGrid, grabLocation, movement, useMemory) => {
+      if (useMemory) memory.makeMove({ grabLocation, movement });
+      board.updateGrid(newGrid);
+    }
   }));
+
+  const memory = new Memory({
+    onChange: ({ grabLocation, movement }) => {
+      logic.fullMove(
+        movement.x,
+        movement.y,
+        { ...grabLocation },
+        { useMemory: false }
+      );
+    }
+  });
+  window.memory = memory;
 
   const keyInput = (window.keyInput = new KeyInput({
     element: document,
-    a: updateStyleAfter(() => logic.fullMove(-1, 0, currentMouseSpot)),
-    d: updateStyleAfter(() => logic.fullMove(1, 0, currentMouseSpot)),
-    w: updateStyleAfter(() => logic.fullMove(0, -1, currentMouseSpot)),
-    s: updateStyleAfter(() => logic.fullMove(0, 1, currentMouseSpot))
+    a: updateStyleAfter(() =>
+      logic.fullMove(-1, 0, currentMouseSpot, { useMemory: true })
+    ),
+    d: updateStyleAfter(() =>
+      logic.fullMove(1, 0, currentMouseSpot, { useMemory: true })
+    ),
+    w: updateStyleAfter(() =>
+      logic.fullMove(0, -1, currentMouseSpot, { useMemory: true })
+    ),
+    s: updateStyleAfter(() =>
+      logic.fullMove(0, 1, currentMouseSpot, { useMemory: true })
+    )
   }));
 
   const mouseInput = (window.mouseInput = new MouseInput({
@@ -82,6 +116,7 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
       keyInput.remove();
       mouseInput.remove();
     },
+    memory,
     shuffle: () => logic.shuffle(30),
     setAllowInput
   };

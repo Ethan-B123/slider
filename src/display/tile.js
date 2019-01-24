@@ -28,7 +28,7 @@ class Tile {
     this.applyStyle(
       this.css[this.highlighted ? "highlightedCss" : "unhighlightedCss"]
     );
-    if(!bool) {
+    if (!bool) {
       this.applyStyle(
         this.css[this.onCorrectPos ? "correctCss" : "incorrectCss"]
       );

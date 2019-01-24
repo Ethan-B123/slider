@@ -2,9 +2,9 @@ class Logic {
   constructor({ dimensions, onUpdate }) {
     this.dimensions = dimensions;
     this.onUpdate = onUpdate;
-    this._onUpdate = () => this.onUpdate(this.cloneTiles());
     this.currentAxis = null;
     this.currentTile = null;
+    this.currentMovement = 0;
     this.tiles = {};
     for (let y = 0; y < dimensions.y; y++) {
       for (let x = 0; x < dimensions.x; x++) {
@@ -13,15 +13,29 @@ class Logic {
     }
   }
 
+  _onUpdate(useMemory = false) {
+    const offAxis = this.currentAxis === "x" ? "y" : "x";
+    const { currentAxis, currentMovement } = this;
+    const movement = { [offAxis]: 0, [currentAxis]: currentMovement };
+    this.onUpdate(
+      this.cloneTiles(),
+      { ...this.currentTileLocation },
+      movement,
+      useMemory
+    );
+  }
+
   shuffle(n) {
     for (let i = 0; i < n; i++) {
       const axis = randomInt(2);
-      const move = [0,0]
+      const move = [0, 0];
       move[axis] = randomInt(2) === 0 ? -1 : 1;
-      const tileLocation = `${randomInt(this.dimensions.x)},${randomInt(this.dimensions.y)}`
-      this.fullMove(move[0], move[1], tileLocation, true);
+      const tileLocation = `${randomInt(this.dimensions.x)},${randomInt(
+        this.dimensions.y
+      )}`;
+      this.fullMove(move[0], move[1], tileLocation, { skipUpdate: true });
     }
-    this._onUpdate();
+    this._onUpdate(false);
   }
 
   tileKeyAtDimension({ x, y }) {
@@ -38,24 +52,27 @@ class Logic {
     return tileClone;
   }
 
-  fullMove(x, y, tileLocation, skipUpdate = false) {
+  fullMove(x, y, tileLocation, { skipUpdate = false, useMemory = false }) {
     if (!tileLocation) return;
     const axis = x ? "x" : "y";
     const amount = x || y;
     this.grab(axis, tileLocation);
     this.move(amount, skipUpdate);
-    this.snap(skipUpdate);
+    this.snap({ useMemory, skipUpdate });
   }
 
   grab(axis, tileLocation) {
     if (this.currentAxis || this.currentTile) throw "already grabbed";
+    if (tileLocation.x !== undefined)
+      tileLocation = [tileLocation.x, tileLocation.y];
     if (typeof tileLocation === "string")
       tileLocation = tileLocation.split(",").map(val => parseInt(val));
     this.currentAxis = axis;
+    this.currentTileLocation = { x: tileLocation[0], y: tileLocation[1] };
     this.currentTile = Object.keys(this.tiles).find(
       key =>
-        this.tiles[key][0] === tileLocation[0] &&
-        this.tiles[key][1] === tileLocation[1]
+        this.tiles[key][0] == tileLocation[0] &&
+        this.tiles[key][1] == tileLocation[1]
     );
   }
 
@@ -69,14 +86,12 @@ class Logic {
     );
     movingTiles.forEach(key => {
       this.tiles[key][axisIdx] += amount;
-      // while(this.tiles[key][axisIdx] < 0) {
-      //   this.tiles[key][axisIdx] += this.dimensions[this.currentAxis]
-      // }
     });
-    if (!skipUpdate) this._onUpdate();
+    this.currentMovement += amount;
+    if (!skipUpdate) this._onUpdate(false);
   }
 
-  snap(skipUpdate = false) {
+  snap({ useMemory, skipUpdate }) {
     if (!this.currentAxis || !this.currentTile) throw "not grabbed";
     const currentTileLocation = this.tiles[this.currentTile].slice();
     const axisIdx = this.currentAxis === "x" ? 0 : 1;
@@ -92,9 +107,10 @@ class Logic {
         this.dimensions[this.currentAxis]
       );
     });
+    if (!skipUpdate) this._onUpdate(useMemory);
     this.currentAxis = null;
     this.currentTile = null;
-    if (!skipUpdate) this._onUpdate();
+    this.currentMovement = 0;
   }
 
   posMod(val, base) {
@@ -108,7 +124,7 @@ class Logic {
 }
 
 function randomInt(max) {
-  return Math.floor(Math.random() * max)
+  return Math.floor(Math.random() * max);
 }
 
 export default Logic;

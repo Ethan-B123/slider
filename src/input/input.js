@@ -40,7 +40,6 @@ export class KeyInput {
   }
 
   _onKeyDown(e) {
-    if(typeof this.keys[e.key] === "function")
-    this.keys[e.key]();
+    if (typeof this.keys[e.key] === "function") this.keys[e.key]();
   }
 }

@@ -4,11 +4,15 @@
 // }
 
 class Memory {
-  constructor({ moveRecord }) {
+  constructor({ moveRecord, onChange }) {
     this.startTime = null;
     this.moveRecord = moveRecord ? moveRecord : [];
     this.undoRecord = [];
     this.mostRecentMoveOffset = -1;
+    this.onChange = (...args) => {
+      onChange(...args);
+      this.testingInfo();
+    };
   }
 
   testingInfo() {
@@ -64,12 +68,16 @@ class Memory {
       { grabLocation: { ...grabLocation }, movement: oppositeMovement },
       false
     );
+    this.onChange({
+      grabLocation: { ...grabLocation },
+      movement: { ...oppositeMovement }
+    });
   }
 
   redo() {
     const { undoRecord, mostRecentMoveOffset } = this;
     if (mostRecentMoveOffset >= -1) {
-      return; // this.testingInfo();
+      return;
     }
     this.mostRecentMoveOffset += 1;
     const { grabLocation, movement } = undoRecord[
@@ -79,6 +87,10 @@ class Memory {
       { grabLocation: { ...grabLocation }, movement: { ...movement } },
       false
     );
+    this.onChange({
+      grabLocation: { ...grabLocation },
+      movement: { ...movement }
+    });
   }
 }
 
