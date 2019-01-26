@@ -111,14 +111,16 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
   }
 
   return {
-    logic,
     endGame: () => {
       board.remove();
       keyInput.remove();
       mouseInput.remove();
     },
     memory,
-    shuffle: () => logic.shuffle(30),
+    shuffle: () => {
+      logic.shuffle(30);
+      memory.startGame(logic.tiles);
+    },
     setAllowInput
   };
 };

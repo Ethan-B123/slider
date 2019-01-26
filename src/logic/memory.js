@@ -74,6 +74,23 @@ class Memory {
     });
   }
 
+  startGame(startingState) {
+    this.startingState = JSON.parse(JSON.stringify(startingState));
+    this.startTimer();
+    this.undoRecord = [];
+    this.moveRecord = [];
+  }
+
+  save() {
+    localStorage.setItem(
+      "replay",
+      JSON.stringify({
+        history: this.moveRecord,
+        startingState: this.startingState
+      })
+    );
+  }
+
   redo() {
     const { undoRecord, mostRecentMoveOffset } = this;
     if (mostRecentMoveOffset >= -1) {
