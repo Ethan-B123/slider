@@ -1,16 +1,35 @@
 import makePlayerGame from "./game/playerGame";
+import MemoryController from "./logic/memoryController";
 import "./index.css";
 
 let globalEndGame = null;
 let globalShuffle = null;
 let globalSetAllowInput = null;
 let globalMemory = null;
+let globalLogic = null;
+
+window.makeMemoryController = history => {
+  return (window.memoryController = new MemoryController({
+    onMove: (move, lastMove) => {
+      console.log(move);
+      globalLogic.fullMove(
+        move.movement.x,
+        move.movement.y,
+        move.grabLocation,
+        { useMemory: false }
+      );
+      if (lastMove) console.log("done");
+    },
+    history
+  }));
+};
 
 window.makeGame = () => {
-  const { endGame, shuffle, setAllowInput, memory } = makePlayerGame({});
+  const { endGame, shuffle, setAllowInput, memory, logic } = makePlayerGame({});
   globalMemory = memory;
   globalEndGame = endGame;
   globalShuffle = shuffle;
+  globalLogic = logic;
   document.querySelector(".game-tile-overlay").style.cursor = "no-drop";
   document.querySelector(".game-tile-overlay").style.opacity = "1";
   window.endGame = endGame;

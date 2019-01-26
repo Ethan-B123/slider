@@ -111,6 +111,7 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
   }
 
   return {
+    logic,
     endGame: () => {
       board.remove();
       keyInput.remove();
