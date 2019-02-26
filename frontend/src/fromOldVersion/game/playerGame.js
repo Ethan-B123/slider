@@ -22,7 +22,7 @@ export default ({ dimensions = { x: 4, y: 4 }, domNode = null }) => {
     correctCss: {
       borderColor: "#fff",
       borderWidth: "1px",
-      opacity: 0.8
+      // opacity: 0.8
       // clipPath:
       //   "polygon(4px 4px, calc(100% - 4px) 4px, calc(100% - 4px) calc(100% - 4px), 4px calc(100% - 4px))"
     },
@@ -30,7 +30,7 @@ export default ({ dimensions = { x: 4, y: 4 }, domNode = null }) => {
       borderColor: "#000",
       borderWidth: "0px",
       // clipPath: "polygon(-1% -1%, 101% -1%, 101% 101%, -1% 101%)",
-      opacity: 1
+      // opacity: 1
     }
   }));
 

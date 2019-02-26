@@ -35,6 +35,22 @@ class Tile {
     }
   }
 
+  setBgOpacity(val) {
+    let backgroundColorString = this["dom_offX"].style.backgroundColor;
+    let type = backgroundColorString.slice(0, 3);
+    type += "a";
+    let newValueString = backgroundColorString
+      .split("(")[1]
+      .split(")")[0]
+      .split(",")
+      .slice(0, 3)
+      .concat([`${val}`])
+      .join(",");
+    newValueString = `${type}(${newValueString})`
+    // console.log(backgroundColorString, newValueString);
+    this.applyStyle({ backgroundColor: newValueString })
+  }
+
   setCorrectPos(bool) {
     this.onCorrectPos = bool;
     this.applyStyle(
@@ -43,6 +59,7 @@ class Tile {
     this.applyStyle(
       this.css[this.onCorrectPos ? "correctCss" : "incorrectCss"]
     );
+    this.setBgOpacity(bool ? 0.75 : 1);
   }
 
   move(x, y) {
