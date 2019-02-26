@@ -5,17 +5,18 @@ import Memory from "../logic/memory";
 
 window.Memory = Memory;
 
-export default ({ dimensions = { x: 4, y: 4 } }) => {
+export default ({ dimensions = { x: 4, y: 4 }, domNode = null }) => {
   let currentMouseSpot = null;
   let currentTileKey = null;
   let allowInput = false;
+  let containerDom = domNode || document.querySelector(".game-tile-container");
 
   const setAllowInput = newVal => (allowInput = newVal);
 
   const board = (window.board = new Board({
     containerSize: { x: 500, y: 500 },
     dimensions,
-    containerDom: document.querySelector(".game-tile-container"),
+    containerDom,
     highlightedCss: { borderWidth: "7px" },
     unhighlightedCss: { borderWidth: null },
     correctCss: {
@@ -70,7 +71,7 @@ export default ({ dimensions = { x: 4, y: 4 } }) => {
   }));
 
   const mouseInput = (window.mouseInput = new MouseInput({
-    element: document.querySelector(".game-tile-overlay"),
+    element: domNode,
     onMouseMove: xy => {
       if (!allowInput) return;
       const mouseSpotObj = board.findDimension(xy);
