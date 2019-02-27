@@ -5,7 +5,7 @@ import Memory from "../logic/memory";
 
 window.Memory = Memory;
 
-export default ({ dimensions = { x: 4, y: 4 }, domNode = null }) => {
+export default ({ dimensions = { x: 4, y: 4 }, domNode = null, onWin }) => {
   let currentMouseSpot = null;
   let currentTileKey = null;
   let allowInput = false;
@@ -36,6 +36,7 @@ export default ({ dimensions = { x: 4, y: 4 }, domNode = null }) => {
 
   const logic = (window.logic = new Logic({
     dimensions,
+    onWin,
     onUpdate: (newGrid, grabLocation, movement, useMemory) => {
       if (useMemory) memory.makeMove({ grabLocation, movement });
       board.updateGrid(newGrid);
@@ -118,10 +119,12 @@ export default ({ dimensions = { x: 4, y: 4 }, domNode = null }) => {
       mouseInput.remove();
     },
     memory,
+    getMemoryInfo: memory.getInfo.bind(memory),
     shuffle: () => {
       logic.shuffle(30);
       memory.startGame(logic.tiles);
     },
-    setAllowInput
+    setAllowInput,
+    setOnWin: logic.setOnWin.bind(logic)
   };
 };

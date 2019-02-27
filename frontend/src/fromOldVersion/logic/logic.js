@@ -1,5 +1,6 @@
 class Logic {
-  constructor({ dimensions, onUpdate }) {
+  constructor({ dimensions, onUpdate, onWin }) {
+    this.onWin = onWin;
     this.dimensions = dimensions;
     this.onUpdate = onUpdate;
     this.currentAxis = null;
@@ -23,6 +24,18 @@ class Logic {
       movement,
       useMemory
     );
+    for (let y = 0; y < this.dimensions.y; y++) {
+      for (let x = 0; x < this.dimensions.x; x++) {
+        const [winX, winY] = this.tiles[`${x},${y}`];
+        if (winX !== x && winY !== y) return;
+      }
+    }
+    if (typeof this.onWin === "function") this.onWin();
+  }
+
+
+  setOnWin(cb) {
+    this.onWin = cb
   }
 
   shuffle(n) {

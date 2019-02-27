@@ -1,12 +1,18 @@
-import React, { Component } from 'react';
-import PlayerGameContainer from './components/PlayerGameContainer';
+import React, { Component } from "react";
+import PlayerGameContainer from "./components/PlayerGameContainer";
 
 class App extends Component {
+  componentDidMount() {
+    if(this.playerGameRef) {
+      console.log(this.playerGameRef);
+    }
+  }
+
   render() {
+    console.log(this.playerGameFunctions);
     return (
       <div className="App">
-        working
-        <PlayerGameContainer />
+        <PlayerGameContainer ref={ref => this.playerGameRef = ref} />
       </div>
     );
   }

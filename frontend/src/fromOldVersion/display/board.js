@@ -97,7 +97,6 @@ class Board {
         transition: "none"
       });
     });
-    await new Promise(res => requestAnimationFrame(res));
     Object.keys(this.grid).forEach(key => {
       this.grid[key].applyStyle({
         transition: null

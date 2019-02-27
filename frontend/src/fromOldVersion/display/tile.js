@@ -47,7 +47,6 @@ class Tile {
       .concat([`${val}`])
       .join(",");
     newValueString = `${type}(${newValueString})`
-    // console.log(backgroundColorString, newValueString);
     this.applyStyle({ backgroundColor: newValueString })
   }
 

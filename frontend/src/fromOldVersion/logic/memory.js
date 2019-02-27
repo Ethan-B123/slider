@@ -8,11 +8,21 @@ class Memory {
     this.startTime = null;
     this.moveRecord = moveRecord ? moveRecord : [];
     this.undoRecord = [];
+    this.startingState = null;
     this.mostRecentMoveOffset = -1;
     this.onChange = (...args) => {
       onChange(...args);
       this.testingInfo();
     };
+  }
+
+  getInfo() {
+    return JSON.parse(
+      JSON.stringify({
+        moveRecord: this.moveRecord,
+        startingState: this.startingState
+      })
+    );
   }
 
   testingInfo() {
